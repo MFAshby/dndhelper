@@ -2,6 +2,19 @@ import React from 'react';
 import { Platform, StatusBar, StyleSheet, View } from 'react-native';
 import { AppLoading, Asset, Font, Icon } from 'expo';
 import AppNavigator from './navigation/AppNavigator';
+import firebase from 'firebase'
+
+// Initialize Firebase
+var config = {
+  apiKey: "AIzaSyAKkfyWwubgqAgQa5pJGMNQtANgLi5-28w",
+  authDomain: "si-hambly-s-dnd-helper.firebaseapp.com",
+  databaseURL: "https://si-hambly-s-dnd-helper.firebaseio.com",
+  projectId: "si-hambly-s-dnd-helper",
+  storageBucket: "",
+  messagingSenderId: "911923508074"
+};
+firebase.initializeApp(config);
+
 
 export default class App extends React.Component {
   state = {
@@ -40,6 +53,7 @@ export default class App extends React.Component {
         // to remove this if you are not using it in your app
         'space-mono': require('./assets/fonts/SpaceMono-Regular.ttf'),
       }),
+      firebase.auth().signInAnonymouslyAndRetrieveData()
     ]);
   };
 

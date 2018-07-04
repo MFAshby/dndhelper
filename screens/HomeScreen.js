@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import {
   Image,
   Platform,
@@ -9,15 +9,42 @@ import {
   View,
 } from 'react-native';
 import { WebBrowser } from 'expo';
-
+import { Ionicons } from '@expo/vector-icons'
 import { MonoText } from '../components/StyledText';
+import firebase from 'firebase'
 
-export default class HomeScreen extends React.Component {
+export default class HomeScreen extends Component {
   static navigationOptions = {
     header: null,
   };
 
+  constructor(props) {
+    super(props)
+    this.state = {
+      user: null
+    }
+  }
+
+  componentDidMount() {
+    this._authUnsubscribe = 
+      firebase
+        .auth()
+        .onAuthStateChanged(user => this.setState({user: user}))
+  }
+
+  componentWillUnmount() {
+    if (this._authUnsubscribe) {
+      this._authUnsubscribe()
+    }
+  }
+  
   render() {
+    let { user } = this.state
+
+    let authDescription = user ?
+      `You are authenticated on firebase with unique ID: ${user.uid}`
+      : `You are not authenticated on firebase`
+    
     return (
       <View style={styles.container}>
         <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
@@ -31,8 +58,11 @@ export default class HomeScreen extends React.Component {
               style={styles.welcomeImage}
             />
           </View>
-
           <View style={styles.getStartedContainer}>
+
+          <Ionicons name="md-bonfire" size={32} color="orange"/>
+          <Text>{authDescription}</Text>
+          
             {this._maybeRenderDevelopmentModeWarning()}
 
             <Text style={styles.getStartedText}>Get started by opening</Text>
